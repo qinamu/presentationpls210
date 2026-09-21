@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Legitimacy After Qandy Qantar</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#171B22;
+    --bg-alt:#1D2330;
+    --text:#EDE8DE;
+    --text-dim:#98A2AF;
+    --accent:#C99A3F;
+    --accent-soft:#8B7238;
+    --sage:#6E8C82;
+    --line:rgba(237,232,222,0.14);
+    --serif:'Fraunces', Georgia, serif;
+    --sans:'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;margin:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    overflow:hidden;
+  }
+
+  /* ---------- deck shell ---------- */
+  .deck{
+    position:relative;
+    height:100vh;
+    height:100dvh;
+    width:100%;
+    overflow:hidden;
+  }
+  .rail{
+    position:fixed;
+    top:0; left:0; right:0;
+    padding:22px clamp(24px,5vw,64px);
+    padding-top:calc(22px + env(safe-area-inset-top,0px));
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    font-family:var(--sans);
+    font-size:12.5px;
+    letter-spacing:.01em;
+    color:var(--text-dim);
+    z-index:20;
+    pointer-events:none;
+  }
+  .rail .who{color:var(--text-dim);}
+  .rail .count{font-variant-numeric:tabular-nums;color:var(--text-dim);}
+  .count b{color:var(--accent);font-weight:600;}
+
+  .progress{
+    position:fixed;
+    bottom:0; left:0; right:0;
+    height:2px;
+    background:var(--line);
+    z-index:20;
+  }
+  .progress > i{
+    display:block; height:100%;
+    background:var(--accent);
+    transition:width .45s cubic-bezier(.65,0,.35,1);
+  }
+
+  /* ---------- slides ---------- */
+  .slide{
+    position:absolute; inset:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:clamp(64px,10vh,120px) clamp(24px,7vw,96px);
+    opacity:0;
+    transform:translateX(24px);
+    transition:opacity .5s ease, transform .5s cubic-bezier(.65,0,.35,1);
+    pointer-events:none;
+  }
+  .slide.active{
+    opacity:1;
+    transform:translateX(0);
+    pointer-events:auto;
+  }
+  .slide.leaving{
+    transform:translateX(-24px);
+  }
+  .slide-inner{max-width:760px;}
+  .slide.wide .slide-inner{max-width:920px;}
+
+  .kicker{
+    font-family:var(--sans);
+    font-size:13px;
+    color:var(--accent);
+    font-weight:500;
+    margin:0 0 18px;
+    letter-spacing:.01em;
+  }
+  h1{
+    font-family:var(--serif);
+    font-weight:500;
+    font-size:clamp(34px,5.6vw,60px);
+    line-height:1.06;
+    margin:0 0 22px;
+    letter-spacing:-.01em;
+  }
+  h2{
+    font-family:var(--serif);
+    font-weight:500;
+    font-size:clamp(26px,4vw,38px);
+    line-height:1.14;
+    margin:0 0 20px;
+    letter-spacing:-.005em;
+  }
+  p.lead{
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:clamp(18px,2.2vw,22px);
+    line-height:1.5;
+    color:var(--text);
+    max-width:62ch;
+    margin:0 0 8px;
+    font-weight:400;
+  }
+  p{
+    font-size:16px;
+    line-height:1.65;
+    color:var(--text);
+    max-width:58ch;
+    margin:0 0 14px;
+  }
+  .dim{color:var(--text-dim);}
+  ul.plain{list-style:none;margin:18px 0 0;padding:0;}
+  ul.plain li{
+    position:relative;
+    padding-left:22px;
+    margin-bottom:12px;
+    font-size:15.5px;
+    line-height:1.6;
+    max-width:58ch;
+    color:var(--text);
+  }
+  ul.plain li::before{
+    content:"";
+    position:absolute; left:0; top:9px;
+    width:6px; height:6px;
+    background:var(--accent);
+    border-radius:50%;
+  }
+  .cite{color:var(--text-dim); font-size:14px;}
+
+  .edit{
+    display:inline-block;
+    margin-top:2px;
+    padding:2px 8px;
+    border:1px dashed var(--accent-soft);
+    border-radius:3px;
+    color:var(--accent);
+    font-size:12.5px;
+    font-family:var(--sans);
+  }
+
+  /* ---------- title slide ---------- */
+  .slide.title{
+    justify-content:center;
+  }
+  .title .courseline{
+    font-size:13px;
+    color:var(--text-dim);
+    margin-bottom:28px;
+  }
+  .title h1{max-width:14ch;}
+  .title .subq{
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:clamp(16px,2vw,19px);
+    color:var(--text-dim);
+    max-width:52ch;
+    line-height:1.55;
+  }
+
+  /* ---------- camps grid ---------- */
+  .camps{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:28px;
+    margin-top:28px;
+  }
+  .camp{
+    border-top:1px solid var(--line);
+    padding-top:16px;
+  }
+  .camp .num{
+    font-family:var(--serif);
+    font-size:13px;
+    color:var(--accent);
+    margin-bottom:8px;
+  }
+  .camp h3{
+    font-family:var(--serif);
+    font-weight:500;
+    font-size:17px;
+    margin:0 0 8px;
+    line-height:1.3;
+  }
+  .camp p{font-size:14px;line-height:1.55;color:var(--text-dim);max-width:none;}
+  .camp .src{font-size:12.5px;color:var(--sage);margin-top:8px;}
+
+  /* ---------- mechanism chain ---------- */
+  .chain{
+    display:flex;
+    align-items:stretch;
+    gap:0;
+    margin-top:34px;
+    flex-wrap:wrap;
+  }
+  .link{
+    flex:1 1 160px;
+    background:var(--bg-alt);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:18px 16px;
+    min-width:150px;
+  }
+  .link .tag{font-size:11.5px;color:var(--accent);margin-bottom:6px;}
+  .link .body{font-size:14px;line-height:1.5;color:var(--text);}
+  .arrow{
+    display:flex; align-items:center; justify-content:center;
+    color:var(--text-dim);
+    font-size:20px;
+    padding:0 10px;
+    flex:0 0 auto;
+  }
+
+  /* ---------- hypothesis cards ---------- */
+  .hcards{display:flex; flex-direction:column; gap:18px; margin-top:26px;}
+  .hcard{
+    border:1px solid var(--line);
+    border-left:3px solid var(--accent);
+    border-radius:4px;
+    padding:20px 22px;
+    background:var(--bg-alt);
+  }
+  .hcard .htag{font-size:12px;color:var(--accent);margin-bottom:8px;font-weight:500;}
+  .hcard p{margin:0 0 12px;font-size:15px;max-width:none;}
+  .hgrid{display:flex;gap:26px;flex-wrap:wrap;font-size:13px;color:var(--text-dim);}
+  .hgrid b{color:var(--text);font-weight:500;}
+
+  /* ---------- reflection slide ---------- */
+  .reflect{display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-top:26px;}
+  .reflect .col{border-top:1px solid var(--line); padding-top:14px;}
+  .reflect h4{font-family:var(--serif);font-weight:500;font-size:16px;margin:0 0 10px;color:var(--accent);}
+  .reflect p{font-size:14.5px;color:var(--text-dim);max-width:none;}
+
+  .hint{
+    position:fixed;
+    bottom:26px; right:clamp(24px,7vw,96px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+    font-size:12.5px;
+    color:var(--text-dim);
+    z-index:20;
+  }
+
+  /* tap zones for mobile / click nav */
+  .zone{position:fixed; top:0; bottom:0; width:34%; z-index:15; cursor:pointer;}
+  .zone.left{left:0;}
+  .zone.right{right:0;}
+
+  @media (max-width:760px){
+    .camps{grid-template-columns:1fr;}
+    .reflect{grid-template-columns:1fr;}
+    .chain{flex-direction:column;}
+    .arrow{transform:rotate(90deg); padding:4px 0;}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .slide{transition:opacity .2s linear; transform:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="rail">
+  <span class="who">The Hypothesis Lab · <span class="edit" style="margin:0;border:none;padding:0;color:var(--text-dim);">Dina</span></span>
+  <span class="count"><b id="cur">1</b> / <span id="tot">14</span></span>
+</div>
+<div class="progress"><i id="bar" style="width:7.1%"></i></div>
+<div class="zone left" onclick="go(-1)" aria-label="Previous slide"></div>
+<div class="zone right" onclick="go(1)" aria-label="Next slide"></div>
+<div class="hint" id="hint">Use → or Space to advance · ← to go back</div>
+
+<div class="deck" id="deck">
+
+  <!-- 1 : TITLE -->
+  <section class="slide title active">
+    <div class="slide-inner">
+      <div class="courseline">PLS 210 · Research Proposal, Part 1 · <span class="edit" style="margin:0;border:none;padding:0;color:var(--text-dim);">Dina</span></div>
+      <h1>Legitimacy After Qandy&nbsp;Qantar</h1>
+      <p class="subq">Did Kazakhstan's January 2022 unrest break public trust in the central government for good — or did the reforms that followed put it back together?</p>
+    </div>
+  </section>
+
+  <!-- 2 : RESEARCH QUESTION -->
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="kicker">Research question</p>
+      <p class="lead">Did the January 2022 unrest produce a durable decline in Kazakhstani citizens' trust in the central government, or have post-2022 reforms restored it toward pre-crisis levels?</p>
+      <p class="dim" style="margin-top:22px;">A clean cause-and-effect question with a direction, tested against a single outcome — trust in the central government — before and after a known shock.</p>
+    </div>
+  </section>
+
+  <!-- 3 : WHY HERE, WHY NOW -->
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="kicker">Why here, why now</p>
+      <h2>The most serious challenge to the regime since independence</h2>
+      <ul class="plain">
+        <li>What began as fuel-price protests in Zhanaozen on 2 January 2022 spread nationwide within days, alongside an attempted elite power struggle and an armed crackdown — Kazakh authorities put the death toll at 238. <span class="cite">(The Diplomat, 2025)</span></li>
+        <li>President Tokayev responded with a CSTO troop intervention and, weeks later, a reform program branded <em>"New Kazakhstan"</em> — including removing Nazarbayev from the Security Council and a constitutional referendum. <span class="cite">(CRS Insight, 2022; polis180)</span></li>
+        <li>Analysts are split on whether that program rebuilt public trust or was mostly symbolic — but almost none of that debate is tested against actual trust data. That's the gap.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 4 : EPISTEMOLOGY -->
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="kicker">Epistemology · positioning</p>
+      <h2>I work in the positivist tradition</h2>
+      <p>Positivists treat legitimacy and trust as observable public orientations that can be measured and compared over time, not just interpreted case by case <span class="cite">(Easton, 1965)</span>.</p>
+      <ul class="plain">
+        <li>My question is a plain cause → effect claim, with a stated direction (decline, or recovery).</li>
+        <li>I test it by comparing trust indicators before and after a dated event, across the same population.</li>
+        <li>The goal is to adjudicate between competing explanations with evidence, not to describe how any one person experienced the crisis.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 5 : CONTRIBUTION -->
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="kicker">Contribution</p>
+      <h2>Testing the "reform theater" thesis against trust data</h2>
+      <ul class="plain">
+        <li>Existing commentary argues from elite behavior and reform texts — that reforms "risk becoming little more than window dressing" <span class="cite">(Foreign Policy, 2022)</span> — but rarely from public trust measures.</li>
+        <li>I extend authoritarian-legitimation theory <span class="cite">(von Soest &amp; Grauvogel, 2017)</span> to ask whether a post-crisis performance-legitimation claim actually moves public trust, or only elite and expert opinion.</li>
+        <li>Kazakhstan gives a clear before/after case: one dated shock, one named reform program, one population to track.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 6 : LITERATURE MAP -->
+  <section class="slide wide">
+    <div class="slide-inner">
+      <p class="kicker">Literature · the map</p>
+      <h2>Three camps</h2>
+      <div class="camps">
+        <div class="camp">
+          <div class="num">01</div>
+          <h3>The rupture camp</h3>
+          <p>The crackdown itself shattered the government's carefully built image of stability, and that damage doesn't simply reverse.</p>
+          <div class="src">Chatham House (2022) · Foreign Policy (2022)</div>
+        </div>
+        <div class="camp">
+          <div class="num">02</div>
+          <h3>The restoration camp</h3>
+          <p>Structural reforms — decentralizing power from a "super-presidential" system — could genuinely rebuild the social contract if implemented.</p>
+          <div class="src">CRS Insight (2022)</div>
+        </div>
+        <div class="camp">
+          <div class="num">03</div>
+          <h3>The façade camp</h3>
+          <p>Power was actually consolidated further under Tokayev; "New Kazakhstan" is rebranding, not reform.</p>
+          <div class="src">polis180 · The Diplomat (2025)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 : LITERATURE GAP -->
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="kicker">Literature · the gap</p>
+      <h2>No one has tested these three stories against trust data</h2>
+      <p>All three camps argue from elite behavior, official texts, or expert judgment. None directly compares pre- and post-2022 public trust figures — the outcome each camp is implicitly making a claim about.</p>
+      <p class="dim">Toolkit for building the study: <b style="color:var(--text)">Easton (1965)</b> on diffuse vs. specific political support · <b style="color:var(--text)">Gilley (2006)</b> on measuring state legitimacy · <b style="color:var(--text)">von Soest &amp; Grauvogel (2017)</b> on authoritarian legitimation strategies.</p>
+      <div class="edit">Add 2–4 peer-reviewed sources from your own database search here before the final draft</div>
+    </div>
+  </section>
+
+  <!-- 8 : THEORY -->
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="kicker">Theory</p>
+      <h2>Theory first, then test</h2>
+      <p class="lead">Theory → Hypothesis → Test (Part 2)</p>
+      <p>A theory is a proposed answer plus a reason <em>why</em> <span class="cite">(Powner, 2015)</span>. My approach is deductive: start from legitimation theory, predict a direction, then test it against trust data in Part 2.</p>
+    </div>
+  </section>
+
+  <!-- 9 : MECHANISM H1 -->
+  <section class="slide wide">
+    <div class="slide-inner">
+      <p class="kicker">Mechanism · the rupture path</p>
+      <h2>How the crackdown could produce lasting distrust</h2>
+      <div class="chain">
+        <div class="link"><div class="tag">CAUSE · IV</div><div class="body">Perceived illegitimacy of the January 2022 crackdown</div></div>
+        <div class="arrow">→</div>
+        <div class="link"><div class="tag">MECHANISM</div><div class="body">Citizens see the state as failing to protect, not just failing to deliver — eroding the belief that authority is rightful, not just effective</div></div>
+        <div class="arrow">→</div>
+        <div class="link"><div class="tag">OUTCOME · DV</div><div class="body">Trust in central government declines and stays low</div></div>
+      </div>
+      <p class="dim" style="margin-top:18px;">Mechanism grounded in Easton's (1965) distinction between diffuse support (rightfulness) and specific support (performance).</p>
+    </div>
+  </section>
+
+  <!-- 10 : MECHANISM H2 -->
+  <section class="slide wide">
+    <div class="slide-inner">
+      <p class="kicker">Mechanism · the restoration path</p>
+      <h2>How substantive reform could rebuild trust</h2>
+      <div class="chain">
+        <div class="link"><div class="tag">CAUSE · IV</div><div class="body">Perceived substantiveness of post-2022 reforms</div></div>
+        <div class="arrow">→</div>
+        <div class="link"><div class="tag">MECHANISM</div><div class="body">Citizens read visible structural change as evidence the government is responsive and accountable</div></div>
+        <div class="arrow">→</div>
+        <div class="link"><div class="tag">OUTCOME · DV</div><div class="body">Trust in central government recovers toward pre-crisis levels</div></div>
+      </div>
+      <p class="dim" style="margin-top:18px;">Mechanism grounded in performance-legitimation theory (von Soest &amp; Grauvogel, 2017).</p>
+    </div>
+  </section>
+
+  <!-- 11 : HYPOTHESES -->
+  <section class="slide wide">
+    <div class="slide-inner">
+      <p class="kicker">Hypotheses</p>
+      <h2>Two directional claims to test</h2>
+      <div class="hcards">
+        <div class="hcard">
+          <div class="htag">H1 · RUPTURE</div>
+          <p>The more citizens perceive the January 2022 crackdown as illegitimate state violence, the lower their sustained trust in the central government.</p>
+          <div class="hgrid"><span><b>IV</b> perceived illegitimacy of the crackdown</span><span><b>DV</b> trust in central government</span><span><b>Direction</b> negative, persists</span></div>
+        </div>
+        <div class="hcard">
+          <div class="htag">H2 · RESTORATION</div>
+          <p>The more citizens perceive post-2022 reforms as substantive rather than symbolic, the more their trust in the central government recovers.</p>
+          <div class="hgrid"><span><b>IV</b> perceived substantiveness of reforms</span><span><b>DV</b> trust in central government</span><span><b>Direction</b> positive</span></div>
+        </div>
+      </div>
+      <div class="edit" style="margin-top:16px;">Consider a third, H3 (façade): reforms are seen as symbolic, so trust does not recover despite the rhetoric — decide if you want to test it directly</div>
+    </div>
+  </section>
+
+  <!-- 12 : AI TRANSPARENCY -->
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="kicker">AI transparency</p>
+      <h2>How I worked with AI</h2>
+      <ul class="plain">
+        <li>I used an AI assistant to help structure the research question into testable hypotheses and to sort sources into the three camps above.</li>
+        <li>It helped me draft and debug this page's code and walked me through publishing it on GitHub Pages.</li>
+        <li>I read and verified every source myself; the argument, the hypotheses, and the choice of case are mine.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 13 : REFLECTION -->
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="kicker">Not graded</p>
+      <h2>Working with AI: what helped, what's still open</h2>
+      <div class="reflect">
+        <div class="col">
+          <h4>Helped me see</h4>
+          <p><span class="edit">[The difference between "trust" and "legitimacy" as constructs, how to develop a directional IV → DV claim]</span></p>
+        </div>
+        <div class="col">
+          <h4>Still don't know</h4>
+          <p><span class="edit">[Whether survey data actually covers the right pre/post windows and if "reform substantiveness" can be measured independently of trust itself]</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 : THANK YOU -->
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="kicker">The Hypothesis Lab</p>
+      <h1 style="font-size:clamp(30px,5vw,48px);">Thank you</h1>
+      <p class="dim">PLS 210 · [Term/Year] · Dina</p>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let i = 0;
+  document.getElementById('tot').textContent = total;
+
+  function render(prevIndex){
+    slides.forEach((s,idx)=>{
+      s.classList.remove('active','leaving');
+      if(idx === i) s.classList.add('active');
+      else if(idx === prevIndex) s.classList.add('leaving');
+    });
+    document.getElementById('cur').textContent = i+1;
+    document.getElementById('bar').style.width = ((i+1)/total*100).toFixed(1) + '%';
+    document.getElementById('hint').style.opacity = i===0 ? '1' : '0.55';
+  }
+
+  function go(delta){
+    const prev = i;
+    i = Math.min(total-1, Math.max(0, i+delta));
+    if(i !== prev) render(prev);
+  }
+
+  window.addEventListener('keydown', (e)=>{
+    if(['ArrowRight','PageDown',' '].includes(e.key)){ e.preventDefault(); go(1); }
+    if(['ArrowLeft','PageUp'].includes(e.key)){ e.preventDefault(); go(-1); }
+  });
+
+  // basic swipe support
+  let touchX = null;
+  window.addEventListener('touchstart', e=>{ touchX = e.touches[0].clientX; });
+  window.addEventListener('touchend', e=>{
+    if(touchX===null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if(Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
+    touchX = null;
+  });
+
+  render(-1);
+</script>
+</body>
+</html>
